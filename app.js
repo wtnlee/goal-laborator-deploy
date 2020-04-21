@@ -6,10 +6,10 @@ const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const mongoose = require('mongoose');
 var session = require('express-session');
 const bcrypt = require('bcryptjs')
-const User = require('./models/User')
+const User = require('models/User')
 
-const graphQLSchema = require('./graphql/schema/index');
-const graphQLResolvers = require('./graphql/resolvers/index');
+const graphQLSchema = require('graphql/schema/index');
+const graphQLResolvers = require('graphql/resolvers/index');
 const isAuth = require('./middleware/is-auth')
 
 const path = require('path');
@@ -22,13 +22,6 @@ saveUninitialized: true , cookie: { secure: false }
 }));
 
 
-const publicPath = '../goallaborator-front-end';
-
-app.use(express.static(__dirname));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../goallaborator-front-end/build/index.html'));
-});
 
 
 userMap = {};
