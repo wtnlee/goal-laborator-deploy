@@ -22,7 +22,7 @@ const port = process.env.PORT || 8080;
 const app = express();
 
 app.use(session({ secret: 'goalsecret', resave: true,
-saveUninitialized: true , cookie: { secure: false }
+saveUninitialized: true , cookie: { secure: true }
 }));
 
 
