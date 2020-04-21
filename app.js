@@ -58,8 +58,11 @@ app.use((req, res, next) => {
 //app.use(isAuth);
 
 app.post('/login', async function (req, res) {
+  console.log("REACHED HERE IN LOGIN ROUTE");
 
   if (!req.session.userid) {
+    console.log("REACHED HERE IN LOGIN ROUTE NOT LOGGED IN");
+
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
       throw new Error('User does not exist');
