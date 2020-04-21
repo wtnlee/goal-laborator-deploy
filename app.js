@@ -49,7 +49,7 @@ app.use(bodyParser.json());
 app.use(express.json());       // to support JSON-encoded bodies
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', "http://localhost:8000/");
+  res.setHeader('Access-Control-Allow-Origin', "https://goal-laborator.herokuapp.com");
   res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type' );
   res.header( "Access-Control-Allow-Credentials", true );
