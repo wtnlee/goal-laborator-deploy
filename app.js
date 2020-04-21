@@ -57,7 +57,7 @@ app.use((req, res, next) => {
 
 //app.use(isAuth);
 
-app.post('/login', async function (req, res) {
+app.post('https://goalback.herokuapp.com/login', async function (req, res) {
   console.log("REACHED HERE IN LOGIN ROUTE");
 
   if (!req.session.userid) {
@@ -89,13 +89,13 @@ app.post('/login', async function (req, res) {
   }
 });
 
-app.get('/logout', function (req, res) {
+app.get('https://goalback.herokuapp.com/logout', function (req, res) {
   console.log(req.session.id + " logout");
   req.session.userid = undefined;
   res.json({"login" : false});
 });
 
-app.get('/checkLogin', function (req, res) {
+app.get('https://goalback.herokuapp.com/checkLogin', function (req, res) {
   console.log(req.session.id + " in CHECK LOGIN");
   if(!req.session.userid){
     console.log("REACHED HERE")
@@ -107,7 +107,7 @@ app.get('/checkLogin', function (req, res) {
   }
 });
 
-app.get('/searchQuery/:user', function (req, res){
+app.get('https://goalback.herokuapp.com/searchQuery/:user', function (req, res){
   var query = req.params.user;
   var split = query.split("@");
 
@@ -136,7 +136,7 @@ app.get('/searchQuery/:user', function (req, res){
 
 
 app.use(
-  '/graphql',
+  'https://goalback.herokuapp.com/graphql',
   graphqlHttp({
     schema: graphQLSchema,
     rootValue: graphQLResolvers,
@@ -166,6 +166,7 @@ mongoose.connect(
     for(var i = 0; i < result.length; i++){
       userMap[result[i]['email']] = result[i]['_id'];
     }
+    console.log(userMap);
 
 
 
