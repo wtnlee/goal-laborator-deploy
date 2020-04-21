@@ -9,7 +9,7 @@ const bcrypt = require('bcryptjs')
 const User = require('./models/user.js')
 
 const graphQLSchema = require('./graphql/schema/index.js');
-const graphQLResolvers = require('/graphql/resolvers/index.js');
+const graphQLResolvers = require('./graphql/resolvers/index.js');
 //onst isAuth = require('./middleware/is-auth')
 
 //const path = require('path');
