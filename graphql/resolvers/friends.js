@@ -1,6 +1,6 @@
-const User = require('../../models/User');
+const User = require('../../models/user.js');
 
-const {transformUser} = require('./merge')
+const {transformUser} = require('./merge.js')
 var mongoose = require('mongoose');
 
 module.exports =  {

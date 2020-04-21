@@ -1,7 +1,7 @@
-const authResolver = require('./auth');
-const goalsResolver = require('./goals');
-const usersResolver = require('./users');
-const friendsResolver = require('./friends');
+const authResolver = require('./auth.js');
+const goalsResolver = require('./goals.js');
+const usersResolver = require('./users.js');
+const friendsResolver = require('./friends.js');
 
 const rootResolver = {
   ...authResolver,

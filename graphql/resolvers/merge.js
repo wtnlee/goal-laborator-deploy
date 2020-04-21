@@ -1,6 +1,6 @@
-const Goal = require('../../models/Goal')
-const User = require('../../models/User')
-const CheckIn = require('../../models/CheckIn');
+const Goal = require('../../models/goal.js')
+const User = require('../../models/user.js')
+const CheckIn = require('../../models/checkin.js');
 
 // const {dateToString} = require('../../helpers/date')
 
