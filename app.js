@@ -6,10 +6,10 @@ const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const mongoose = require('mongoose');
 var session = require('express-session');
 const bcrypt = require('bcryptjs')
-const User = require('../models/user.js')
+const User = require('./models/user.js')
 
-const graphQLSchema = require('/graphql/schema/index');
-const graphQLResolvers = require('/graphql/resolvers/index');
+const graphQLSchema = require('./graphql/schema/index.js');
+const graphQLResolvers = require('/graphql/resolvers/index.js');
 //onst isAuth = require('./middleware/is-auth')
 
 //const path = require('path');
