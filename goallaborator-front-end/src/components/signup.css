@@ -1,0 +1,17 @@
+.SignUpBox {
+    align-content: center;
+    max-width: 500px;
+    margin: 25px auto;
+}
+
+.SignUpBoxTitle {
+    text-align: center;
+}
+
+.footer {
+    bottom: 20px;
+    width: max-content;
+    height: 100%;
+    margin: 0 auto;
+    color: azure;
+}

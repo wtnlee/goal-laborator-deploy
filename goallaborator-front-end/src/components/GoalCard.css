@@ -1,0 +1,13 @@
+.root {
+  max-width: 400;
+  max-height: 300;
+  border-color: red;
+}
+
+.title {
+  font-size: 14;
+}
+
+.pos {
+  margin-bottom: 12;
+}

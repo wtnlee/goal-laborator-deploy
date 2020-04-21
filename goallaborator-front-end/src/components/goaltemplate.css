@@ -1,0 +1,32 @@
+.GoalBox {
+    align-content: center;
+    max-width: 700px;
+    margin: 25px auto;
+}
+
+.GoalBoxTitle {
+    text-align: center;
+}
+
+.footer {
+    bottom: 20px;
+    width: max-content;
+    height: 100%;
+    margin: 0 auto;
+    color: azure;
+}
+
+.CategoryToggle {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.FreqSelect {
+    margin: auto;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
