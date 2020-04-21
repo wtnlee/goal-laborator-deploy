@@ -5,8 +5,12 @@ const { buildSchema } = require('graphql');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const mongoose = require('mongoose');
 var session = require('express-session');
+//var restify = require('restify');
+
 const bcrypt = require('bcryptjs')
 const User = require('./models/user.js')
+
+
 
 const graphQLSchema = require('./graphql/schema/index.js');
 const graphQLResolvers = require('./graphql/resolvers/index.js');
@@ -23,6 +27,7 @@ saveUninitialized: true , cookie: { secure: false }
 
 
 
+//app.use(restify.CORS());
 
 userMap = {};
 module.exports.userMap = userMap;
@@ -41,8 +46,9 @@ app.use(express.json());       // to support JSON-encoded bodies
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type' , 'Authorization');
   res.header( "Access-Control-Allow-Credentials", true );
+  
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
