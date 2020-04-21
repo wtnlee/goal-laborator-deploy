@@ -143,7 +143,7 @@ app.use(
 // )
 
 mongoose.connect(
-  process.env.DATABASE_URL,
+  "mongodb+srv://databaseuser1:HADY373vETEcZVET@cluster0-x48cr.mongodb.net/goals-dev?retryWrites=true&w=majority",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
