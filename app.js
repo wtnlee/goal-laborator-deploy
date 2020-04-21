@@ -7,10 +7,13 @@ const mongoose = require('mongoose');
 var session = require('express-session');
 //var restify = require('restify');
 
+const path = require('path');
+
+
 const bcrypt = require('bcryptjs')
 const User = require('./models/user.js')
 
-
+console.log("HUH");
 
 const graphQLSchema = require('./graphql/schema/index.js');
 const graphQLResolvers = require('./graphql/resolvers/index.js');
@@ -20,6 +23,9 @@ const graphQLResolvers = require('./graphql/resolvers/index.js');
 const port = process.env.PORT || 8080;
 
 const app = express();
+
+
+app.use(express.static(path.join(__dirname, 'goallaborator-front-end/build')));
 
 app.use(session({ secret: 'goalsecret', resave: true,
 saveUninitialized: true , cookie: { secure: false, httpOnly : false }
@@ -44,7 +50,7 @@ app.use(bodyParser.json());
 app.use(express.json());       // to support JSON-encoded bodies
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', "https://goalclient.herokuapp.com");
+  res.setHeader('Access-Control-Allow-Origin', "http://localhost:8000/");
   res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type' );
   res.header( "Access-Control-Allow-Credentials", true );
@@ -55,6 +61,10 @@ app.use((req, res, next) => {
     return res.sendStatus(200);
   }
   next();
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/goallaborator-front-end/build/index.html'));
 });
 
 //app.use(isAuth);
@@ -152,6 +162,9 @@ app.use(
 //     endpointURL: '/graphql'
 //   })
 // )
+
+console.log("HUH");
+
 
 mongoose.connect(
   "mongodb+srv://databaseuser1:HADY373vETEcZVET@cluster0-x48cr.mongodb.net/goals-dev?retryWrites=true&w=majority",
