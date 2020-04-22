@@ -270,7 +270,7 @@ module.exports = {
 
         let queryParams1 = {
           checkInUser: mongoose.Types.ObjectId(req.session.userid),
-          checkInGoal: mongoose.Types.ObjectId(goalID)
+          checkInGoal: mongoose.Types.ObjectId(goalID1)
         }
 
         let thisGoalCheckIns1= [];
