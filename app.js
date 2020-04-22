@@ -62,9 +62,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/goallaborator-front-end/build/index.html'));
-});
 
 //app.use(isAuth);
 
@@ -164,6 +161,11 @@ app.use(
 
 console.log("HUH");
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/goallaborator-front-end/build/index.html'));
+});
+
+
 
 mongoose.connect(
   "mongodb+srv://databaseuser1:HADY373vETEcZVET@cluster0-x48cr.mongodb.net/goals-dev?retryWrites=true&w=majority",
@@ -187,6 +189,8 @@ mongoose.connect(
     console.log('Ready to search for friends');
 
   });
+
+
 
 }).catch(err => {
     console.log('database connection failed, server not started');

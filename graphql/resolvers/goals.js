@@ -1,6 +1,6 @@
-const Goal = require('../../models/Goal');
-const User = require('../../models/User');
-const CheckIn = require('../../models/CheckIn');
+const Goal = require('../../models/goal.js');
+ const User = require('../../models/user.js');
+ const CheckIn = require('../../models/checkin.js');
 var mongoose = require('mongoose');
 
 const {transformGoal, transformCheckIn} = require('./merge')
@@ -35,8 +35,8 @@ module.exports = {
   },
   completeGoal: async (args, req) => {
     try {
-      var goalId = mongoose.Types.ObjectId(args.goalId);
-      const result = await Goal.findById(goalId);
+      let goalId = mongoose.Types.ObjectId(args.goalId);
+      let result = await Goal.findById(goalId);
       if (result.creater !== req.userId) {
         throw Error('User not authorized to complete goal');
       }
@@ -50,7 +50,7 @@ module.exports = {
   },
   collaborateOnGoal: async (args, req) => {
     try {
-      var goalId = mongoose.Types.ObjectId(args.goalId);
+      let goalId = mongoose.Types.ObjectId(args.goalId);
       const result = await Goal.findById(goalId);
       if (result.creater === req.session.userid) {
         throw Error('creator cant collaborate on goal');
@@ -106,7 +106,7 @@ module.exports = {
   // },
   goalCheckIn: async (args, req) => {
     try {
-      var goalId = mongoose.Types.ObjectId(args.goalId);
+      let goalId = mongoose.Types.ObjectId(args.goalId);
       const result = await Goal.findById(goalId);
       // console.log(req.session.userid);
       const collaborator = await User.findById(req.session.userid);
@@ -115,7 +115,7 @@ module.exports = {
         throw Error('cant find user');
       }
 
-      var weightedPoints = 1;
+      let weightedPoints = 1;
       if (!result.private) {
         weightedPoints = 2;
       }
@@ -146,7 +146,7 @@ module.exports = {
         throw Error('cant find collaborator');
       }
 
-      var goalId = mongoose.Types.ObjectId(args.goalId);
+      let goalId = mongoose.Types.ObjectId(args.goalId);
       const result = await Goal.findById(goalId);
 
       result.likes.push(collaborator);
@@ -165,36 +165,42 @@ module.exports = {
           throw Error('cant find user');
         }
 
-        var myDashBoardGoals = [];
+        let myDashBoardGoals = [];
 
         for (let i = 0; i < user.createdGoals.length; i++) {
           goalID = user.createdGoals[i];
-          var thisObject = {}
-          var thisGoal = await Goal.findById(goalID);
+          let thisObject = {}
+          let thisGoal = await Goal.findById(goalID);
+          console.log(thisGoal);
 
-          var queryParams = {
+          let queryParams = {
             checkInUser: mongoose.Types.ObjectId(req.session.userid),
             checkInGoal: mongoose.Types.ObjectId(goalID)
           }
 
-          var thisGoalCheckIns= [];
-          var pastWeekCheckIns = [];
+          let thisGoalCheckIns= [];
+          let pastWeekCheckIns = [];
+        
 
-          await CheckIn.find(queryParams).then(checkIns => {
+          let x = await CheckIn.find(queryParams).then(checkIns => {
+            console.log(queryParams.checkInGoal);
+            console.log(thisGoal.title);
+            console.log(checkIns);
             for (let j = 0; j <checkIns.length; j++) {
-                    // console.log(checkIns[j]);
+                    //console.log(checkIns[j]);
                     thisGoalCheckIns.push(checkIns[j]);
                   }
           });
+         // console.log("AFTER ASYNC");
 
-          var pastDate = new Date(Date.now() - 604800000);
+          let pastDate = new Date(Date.now() - 604800000);
           const today = new Date();
-          var shouldCheckIn = true;
+          let shouldCheckIn = true;
 
           for (let j = 0; j < thisGoalCheckIns.length; j++) {
 
-            var checkIn = thisGoalCheckIns[j];
-            var thisCheckInDate = new Date(checkIn.dateOfCheckIn);
+            let checkIn = thisGoalCheckIns[j];
+            let thisCheckInDate = new Date(checkIn.dateOfCheckIn);
 
             if (thisCheckInDate > pastDate) {
               pastWeekCheckIns.push(thisCheckInDate.toISOString());
@@ -203,24 +209,44 @@ module.exports = {
             shouldCheckIn = !(thisCheckInDate.getDate() === today.getDate() && thisCheckInDate.getMonth() === today.getMonth() && thisCheckInDate.getFullYear() === today.getFullYear());
           }
 
+         
+
+          thisObject.goal = transformGoal(thisGoal);
           if (thisObject.goal.completed) {
             shouldCheckIn = false;
           }
-
-          thisObject.goal = transformGoal(thisGoal);
           thisObject.shouldCheckIn = shouldCheckIn;
           thisObject.checkIns = pastWeekCheckIns;
           myDashBoardGoals.push(thisObject);
         }
 
         myDashBoardGoals.sort(function(a,b) {
-          if (a.goal.completed) {
+          if(a.shouldCheckIn){
+            return -1;
+          }
+          if(b.shouldCheckIn){
             return 1;
           }
-          if (a.shouldCheckIn) {
+          if(a.goal.completed){
+            return -1;
+          }
+          if(b.goal.completed){
             return -1;
           }
           return 1;
+          // if (a.goal.completed && !b.goal.completed) {
+          //   return 1;
+          // }
+          // if (!a.goal.completed && b.goal.completed) {
+          //   return -1;
+          // }
+          // if (a.shouldCheckIn && b.goal.completed) {
+          //   return -1;
+          // }
+          // if (b.shouldCheckIn && a.goal.completed) {
+          //   return -1;
+          // }
+          // return 0;
         });
 
         return myDashBoardGoals;
@@ -230,70 +256,77 @@ module.exports = {
   },
   myDashboardCollaboratedGoals: async (args, req) => {
     try {
-      const user = await User.findById(req.session.userid);
-      if (!user) {
+      let user1 = await User.findById(req.session.userid);
+      if (!user1) {
         throw Error('cant find user');
       }
 
-      var myDashBoardGoals = [];
+      let myDashBoardGoals1 = [];
 
-      for (let i = 0; i < user.collaboratedGoals.length; i++) {
-        goalID = user.collaboratedGoals[i];
-        var thisObject = {}
-        var thisGoal = await Goal.findById(goalID);
+      for (let i = 0; i < user1.collaboratedGoals.length; i++) {
+        goalID1 = user1.collaboratedGoals[i];
+        let thisObject1 = {}
+        let thisGoal1 = await Goal.findById(goalID1);
 
-        var queryParams = {
+        let queryParams1 = {
           checkInUser: mongoose.Types.ObjectId(req.session.userid),
           checkInGoal: mongoose.Types.ObjectId(goalID)
         }
 
-        var thisGoalCheckIns= [];
-        var pastWeekCheckIns = [];
+        let thisGoalCheckIns1= [];
+        let pastWeekCheckIns1 = [];
 
-        await CheckIn.find(queryParams).then(checkIns => {
-          for (let j = 0; j <checkIns.length; j++) {
-            thisGoalCheckIns.push(checkIns[j]);
+        let test1 = await CheckIn.find(queryParams1).then(checkIns1 => {
+          for (let j = 0; j <checkIns1.length; j++) {
+            thisGoalCheckIns1.push(checkIns1[j]);
           }
         });
 
-        var pastDate = new Date(Date.now() - 604800000);
+        let pastDate = new Date(Date.now() - 604800000);
 
         const today = new Date();
 
-        var shouldCheckIn = true;
+        let shouldCheckIn1 = true;
 
-        for (let j = 0; j < thisGoalCheckIns.length; j++) {
-          var checkIn = thisGoalCheckIns[j];
-          var thisCheckInDate = new Date(checkIn.dateOfCheckIn);
+        for (let j = 0; j < thisGoalCheckIns1.length; j++) {
+          let checkIn1 = thisGoalCheckIns1[j];
+          let thisCheckInDate1 = new Date(checkIn1.dateOfCheckIn);
 
-          if (thisCheckInDate > pastDate) {
-            pastWeekCheckIns.push(thisCheckInDate.toISOString());
+          if (thisCheckInDate1 > pastDate) {
+            pastWeekCheckIns1.push(thisCheckInDate1.toISOString());
           }
 
-          shouldCheckIn = !(thisCheckInDate.getDate() === today.getDate() && thisCheckInDate.getMonth() === today.getMonth() && thisCheckInDate.getFullYear() === today.getFullYear());
+          shouldCheckIn1 = !(thisCheckInDate1.getDate() === today.getDate() && thisCheckInDate1.getMonth() === today.getMonth() && thisCheckInDate1.getFullYear() === today.getFullYear());
         }
 
-        if (thisObject.goal.completed) {
+
+        thisObject1.goal = transformGoal(thisGoal1);
+
+        if (thisObject1.goal.completed) {
           shouldCheckIn = false;
         }
-
-        thisObject.goal = transformGoal(thisGoal);
-        thisObject.shouldCheckIn = shouldCheckIn;
-        thisObject.checkIns = pastWeekCheckIns;
-        myDashBoardGoals.push(thisObject);
+        thisObject1.shouldCheckIn = shouldCheckIn1;
+        thisObject1.checkIns = pastWeekCheckIns1;
+        myDashBoardGoals1.push(thisObject1);
       }
 
-      myDashBoardGoals.sort(function(a,b) {
-        if (a.goal.completed) {
+      myDashBoardGoals1.sort(function(a,b) {
+        if(a.shouldCheckIn){
+          return -1;
+        }
+        if(b.shouldCheckIn){
           return 1;
         }
-        if (a.shouldCheckIn) {
+        if(a.goal.completed){
+          return -1;
+        }
+        if(b.goal.completed){
           return -1;
         }
         return 1;
       });
 
-      return myDashBoardGoals;
+      return myDashBoardGoals1;
     } catch (err) {
       throw err;
     }
@@ -307,7 +340,7 @@ module.exports = {
 
       let allPublicGoals = [];
 
-      var queryParams = {
+      let queryParams = {
         checkInUser: mongoose.Types.ObjectId(req.session.userid),
         checkInGoal: mongoose.Types.ObjectId(goalID)
       }
@@ -315,7 +348,7 @@ module.exports = {
       for (let i = 0; i < user.friends.length; i++) {
         let friendId = user.friends[i];
 
-        var queryParams = {
+        let queryParams = {
           category: "GENERAL",
           private: false,
           creator: mongoose.Types.ObjectId(friendId),
@@ -334,8 +367,8 @@ module.exports = {
       }
 
       allPublicGoals.sort(function(a,b) {
-        var aDate = new Date(a.dateCreated);
-        var bDate = new Date(b.dateCreated);
+        let aDate = new Date(a.dateCreated);
+        let bDate = new Date(b.dateCreated);
 
         if (aDate > bDate) {
           return -1;
@@ -357,7 +390,7 @@ module.exports = {
 
       let allPublicGoals = [];
 
-      var queryParams = {
+      let queryParams = {
         checkInUser: mongoose.Types.ObjectId(req.session.userid),
         checkInGoal: mongoose.Types.ObjectId(goalID)
       }
@@ -365,7 +398,7 @@ module.exports = {
       for (let i = 0; i < user.friends.length; i++) {
         let friendId = user.friends[i];
 
-        var queryWellnessParam = {
+        let queryWellnessParam = {
           category: "WELLNESS",
           private: false,
           creator: mongoose.Types.ObjectId(friendId),
@@ -382,7 +415,7 @@ module.exports = {
           }
         });
 
-        var queryPhysicalParam = {
+        let queryPhysicalParam = {
           category: "PHYSICAL",
           private: false,
           creator: mongoose.Types.ObjectId(friendId),
@@ -399,14 +432,14 @@ module.exports = {
           }
         });
 
-        var queryDietParam = {
+        let queryDietParam = {
           category: "DIET",
           private: false,
           creator: mongoose.Types.ObjectId(friendId),
           completed: false
         }
 
-        await Goal.find(queryDietParam).then(goals => {
+        let test = await Goal.find(queryDietParam).then(goals => {
           for (let j = 0; j < goals.length; j++) {
             let currentGoal = goals[j];
             currentGoal.dateCreated = (new Date(currentGoal.dateCreated)).toISOString;
@@ -418,8 +451,8 @@ module.exports = {
       }
 
       allPublicGoals.sort(function(a,b) {
-        var aDate = new Date(a.dateCreated);
-        var bDate = new Date(b.dateCreated);
+        let aDate = new Date(a.dateCreated);
+        let bDate = new Date(b.dateCreated);
 
         if (aDate > bDate) {
           return -1;
@@ -441,7 +474,7 @@ module.exports = {
 
       let allPublicGoals = [];
 
-      var queryParams = {
+      let queryParams = {
         checkInUser: mongoose.Types.ObjectId(req.session.userid),
         checkInGoal: mongoose.Types.ObjectId(goalID)
       }
@@ -449,14 +482,14 @@ module.exports = {
       for (let i = 0; i < user.friends.length; i++) {
         let friendId = user.friends[i];
 
-        var queryHobbyParams = {
+        let queryHobbyParams = {
           category: "HOBBY",
           private: false,
           creator: mongoose.Types.ObjectId(friendId),
           completed: false
         }
 
-        await Goal.find(queryHobbyParams).then(goals => {
+        let x = await Goal.find(queryHobbyParams).then(goals => {
           for (let j = 0; j < goals.length; j++) {
             let currentGoal = goals[j];
             currentGoal.dateCreated = (new Date(currentGoal.dateCreated)).toISOString;
@@ -466,14 +499,14 @@ module.exports = {
           }
         });
 
-        var queryCreativeParams = {
+        let queryCreativeParams = {
           category: "CREATIVE",
           private: false,
           creator: mongoose.Types.ObjectId(friendId),
           completed: false
         }
 
-        await Goal.find(queryCreativeParams).then(goals => {
+        let test = await Goal.find(queryCreativeParams).then(goals => {
           for (let j = 0; j < goals.length; j++) {
             let currentGoal = goals[j];
             currentGoal.dateCreated = (new Date(currentGoal.dateCreated)).toISOString;
@@ -485,8 +518,8 @@ module.exports = {
       }
 
       allPublicGoals.sort(function(a,b) {
-        var aDate = new Date(a.dateCreated);
-        var bDate = new Date(b.dateCreated);
+        let aDate = new Date(a.dateCreated);
+        let bDate = new Date(b.dateCreated);
 
         if (aDate > bDate) {
           return -1;
