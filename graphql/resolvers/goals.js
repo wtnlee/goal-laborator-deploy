@@ -171,7 +171,7 @@ module.exports = {
           goalID = user.createdGoals[i];
           let thisObject = {}
           let thisGoal = await Goal.findById(goalID);
-          console.log(thisGoal);
+         // console.log(thisGoal);
 
           let queryParams = {
             checkInUser: mongoose.Types.ObjectId(req.session.userid),
@@ -183,9 +183,9 @@ module.exports = {
         
 
           let x = await CheckIn.find(queryParams).then(checkIns => {
-            console.log(queryParams.checkInGoal);
-            console.log(thisGoal.title);
-            console.log(checkIns);
+           // console.log(queryParams.checkInGoal);
+           // console.log(thisGoal.title);
+           // console.log(checkIns);
             for (let j = 0; j <checkIns.length; j++) {
                     //console.log(checkIns[j]);
                     thisGoalCheckIns.push(checkIns[j]);
@@ -356,7 +356,7 @@ module.exports = {
         }
 
         await Goal.find(queryParams4).then(goals4 => {
-          for (let j = 0; j < goals.length; j++) {
+          for (let j = 0; j < goals4.length; j++) {
             let currentGoal4 = goals4[j];
             currentGoal4.dateCreated = (new Date(currentGoal4.dateCreated)).toISOString;
             if (!currentGoal4.collaborators.includes(req.session.userid)) {
@@ -479,8 +479,8 @@ module.exports = {
       //   checkInGoal: mongoose.Types.ObjectId(goalID)
       // }
 
-      for (let i = 0; i < user.friends.length; i++) {
-        let friendId1 = user.friends[i];
+      for (let i = 0; i < user1.friends.length; i++) {
+        let friendId1 = user1.friends[i];
 
         let queryHobbyParams1 = {
           category: "HOBBY",
@@ -489,7 +489,7 @@ module.exports = {
           completed: false
         }
 
-        let x = await Goal.find(queryHobbyParams1).then(goals1 => {
+        let x10 = await Goal.find(queryHobbyParams1).then(goals1 => {
           for (let j = 0; j < goals1.length; j++) {
             let currentGoal1 = goals1[j];
             currentGoal1.dateCreated = (new Date(currentGoal1.dateCreated)).toISOString;
@@ -502,11 +502,11 @@ module.exports = {
         let queryCreativeParams1 = {
           category: "CREATIVE",
           private: false,
-          creator: mongoose.Types.ObjectId(friendId),
+          creator: mongoose.Types.ObjectId(friendId1),
           completed: false
         }
 
-        let test = await Goal.find(queryCreativeParams1).then(goals2 => {
+        let test10 = await Goal.find(queryCreativeParams1).then(goals2 => {
           for (let j = 0; j < goals2.length; j++) {
             let currentGoal2 = goals2[j];
             currentGoal2.dateCreated = (new Date(currentGoal2.dateCreated)).toISOString;
