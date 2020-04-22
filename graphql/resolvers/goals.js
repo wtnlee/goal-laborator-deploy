@@ -1,6 +1,6 @@
-const Goal = require('../../models/goal.js');
-const User = require('../../models/user.js');
-const CheckIn = require('../../models/checkin.js');
+const Goal = require('../../models/Goal');
+const User = require('../../models/User');
+const CheckIn = require('../../models/CheckIn');
 var mongoose = require('mongoose');
 
 const {transformGoal, transformCheckIn} = require('./merge')
@@ -203,6 +203,10 @@ module.exports = {
             shouldCheckIn = !(thisCheckInDate.getDate() === today.getDate() && thisCheckInDate.getMonth() === today.getMonth() && thisCheckInDate.getFullYear() === today.getFullYear());
           }
 
+          if (thisObject.goal.completed) {
+            shouldCheckIn = false;
+          }
+
           thisObject.goal = transformGoal(thisGoal);
           thisObject.shouldCheckIn = shouldCheckIn;
           thisObject.checkIns = pastWeekCheckIns;
@@ -211,7 +215,7 @@ module.exports = {
 
         myDashBoardGoals.sort(function(a,b) {
           if (a.goal.completed) {
-            return -1;
+            return 1;
           }
           if (a.shouldCheckIn) {
             return -1;
@@ -269,6 +273,10 @@ module.exports = {
           shouldCheckIn = !(thisCheckInDate.getDate() === today.getDate() && thisCheckInDate.getMonth() === today.getMonth() && thisCheckInDate.getFullYear() === today.getFullYear());
         }
 
+        if (thisObject.goal.completed) {
+          shouldCheckIn = false;
+        }
+
         thisObject.goal = transformGoal(thisGoal);
         thisObject.shouldCheckIn = shouldCheckIn;
         thisObject.checkIns = pastWeekCheckIns;
@@ -277,7 +285,7 @@ module.exports = {
 
       myDashBoardGoals.sort(function(a,b) {
         if (a.goal.completed) {
-          return -1;
+          return 1;
         }
         if (a.shouldCheckIn) {
           return -1;
