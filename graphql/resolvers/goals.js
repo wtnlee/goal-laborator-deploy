@@ -333,40 +333,40 @@ module.exports = {
   },
   myExploreGeneralGoals : async (args, req) => {
     try {
-      const user = await User.findById(req.session.userid);
-      if (!user) {
+      const user4 = await User.findById(req.session.userid);
+      if (!user4) {
         throw Error('cant find user');
       }
 
-      let allPublicGoals = [];
+      let allPublicGoals4 = [];
 
-      let queryParams = {
-        checkInUser: mongoose.Types.ObjectId(req.session.userid),
-        checkInGoal: mongoose.Types.ObjectId(goalID)
-      }
+      // let queryParams4 = {
+      //   checkInUser: mongoose.Types.ObjectId(req.session.userid),
+      //   checkInGoal: mongoose.Types.ObjectId(goalID)
+      // }
 
-      for (let i = 0; i < user.friends.length; i++) {
-        let friendId = user.friends[i];
+      for (let i = 0; i < user4.friends.length; i++) {
+        let friendId4 = user4.friends[i];
 
-        let queryParams = {
+        let queryParams4 = {
           category: "GENERAL",
           private: false,
-          creator: mongoose.Types.ObjectId(friendId),
+          creator: mongoose.Types.ObjectId(friendId4),
           completed: false
         }
 
-        await Goal.find(queryParams).then(goals => {
+        await Goal.find(queryParams4).then(goals4 => {
           for (let j = 0; j < goals.length; j++) {
-            let currentGoal = goals[j];
-            currentGoal.dateCreated = (new Date(currentGoal.dateCreated)).toISOString;
-            if (!currentGoal.collaborators.includes(req.session.userid)) {
-              allPublicGoals.push(transformGoal(currentGoal));
+            let currentGoal4 = goals4[j];
+            currentGoal4.dateCreated = (new Date(currentGoal4.dateCreated)).toISOString;
+            if (!currentGoal4.collaborators.includes(req.session.userid)) {
+              allPublicGoals4.push(transformGoal(currentGoal4));
             }
           }
         });
       }
 
-      allPublicGoals.sort(function(a,b) {
+      allPublicGoals4.sort(function(a,b) {
         let aDate = new Date(a.dateCreated);
         let bDate = new Date(b.dateCreated);
 
@@ -376,7 +376,7 @@ module.exports = {
         return 1;
       });
 
-      return allPublicGoals;
+      return allPublicGoals4;
     } catch (err) {
       throw err;
     }
@@ -467,57 +467,57 @@ module.exports = {
   },
   myExploreHobbyCreativeGoals : async (args, req) => {
     try {
-      const user = await User.findById(req.session.userid);
-      if (!user) {
+      const user1 = await User.findById(req.session.userid);
+      if (!user1) {
         throw Error('cant find user');
       }
 
-      let allPublicGoals = [];
+      let allPublicGoals1 = [];
 
-      let queryParams = {
-        checkInUser: mongoose.Types.ObjectId(req.session.userid),
-        checkInGoal: mongoose.Types.ObjectId(goalID)
-      }
+      // let queryParams1 = {
+      //   checkInUser: mongoose.Types.ObjectId(req.session.userid),
+      //   checkInGoal: mongoose.Types.ObjectId(goalID)
+      // }
 
       for (let i = 0; i < user.friends.length; i++) {
-        let friendId = user.friends[i];
+        let friendId1 = user.friends[i];
 
-        let queryHobbyParams = {
+        let queryHobbyParams1 = {
           category: "HOBBY",
           private: false,
-          creator: mongoose.Types.ObjectId(friendId),
+          creator: mongoose.Types.ObjectId(friendId1),
           completed: false
         }
 
-        let x = await Goal.find(queryHobbyParams).then(goals => {
-          for (let j = 0; j < goals.length; j++) {
-            let currentGoal = goals[j];
-            currentGoal.dateCreated = (new Date(currentGoal.dateCreated)).toISOString;
-            if (!currentGoal.collaborators.includes(req.session.userid)) {
-              allPublicGoals.push(transformGoal(currentGoal));
+        let x = await Goal.find(queryHobbyParams1).then(goals1 => {
+          for (let j = 0; j < goals1.length; j++) {
+            let currentGoal1 = goals1[j];
+            currentGoal1.dateCreated = (new Date(currentGoal1.dateCreated)).toISOString;
+            if (!currentGoal1.collaborators.includes(req.session.userid)) {
+              allPublicGoals1.push(transformGoal(currentGoal1));
             }
           }
         });
 
-        let queryCreativeParams = {
+        let queryCreativeParams1 = {
           category: "CREATIVE",
           private: false,
           creator: mongoose.Types.ObjectId(friendId),
           completed: false
         }
 
-        let test = await Goal.find(queryCreativeParams).then(goals => {
-          for (let j = 0; j < goals.length; j++) {
-            let currentGoal = goals[j];
-            currentGoal.dateCreated = (new Date(currentGoal.dateCreated)).toISOString;
-            if (!currentGoal.collaborators.includes(req.session.userid)) {
-              allPublicGoals.push(transformGoal(currentGoal));
+        let test = await Goal.find(queryCreativeParams1).then(goals2 => {
+          for (let j = 0; j < goals2.length; j++) {
+            let currentGoal2 = goals2[j];
+            currentGoal2.dateCreated = (new Date(currentGoal2.dateCreated)).toISOString;
+            if (!currentGoal2.collaborators.includes(req.session.userid)) {
+              allPublicGoals1.push(transformGoal(currentGoal2));
             }
           }
         });
       }
 
-      allPublicGoals.sort(function(a,b) {
+      allPublicGoals1.sort(function(a,b) {
         let aDate = new Date(a.dateCreated);
         let bDate = new Date(b.dateCreated);
 
@@ -527,7 +527,7 @@ module.exports = {
         return 1;
       });
 
-      return allPublicGoals;
+      return allPublicGoals1;
     } catch (err) {
       throw err;
     }
