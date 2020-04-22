@@ -53,7 +53,7 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type' );
   res.header( "Access-Control-Allow-Credentials", true );
- // res.set('credentials', 'include');
+  res.set('credentials', 'include');
 
   
   if (req.method === 'OPTIONS') {
@@ -62,7 +62,9 @@ app.use((req, res, next) => {
   next();
 });
 
-
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/goallaborator-front-end/build/index.html'));
+});
 
 //app.use(isAuth);
 
@@ -152,10 +154,6 @@ app.use(
     graphiql: true
   })
 );
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/goallaborator-front-end/build/index.html'));
-});
 
 // app.use(
 //   '/graphiql',
